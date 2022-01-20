@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-          cache: 'npm'
+
       - run: yarn install
       - run: npx browserslist@latest --update-db
       - run: yarn build

@@ -7,7 +7,7 @@ import {
   FormControl,
   FormLabel,
   Heading,
-  HTMLChakraProps,
+  HTMLChakraProps, Link,
   Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
   Stack, Text,
   useColorModeValue, useDisclosure, VStack
@@ -84,7 +84,11 @@ export default function Index() {
 
             <FormControl id="agree">
               <VStack spacing={[1, 5]} direction={['column', 'row']}>
-                <Checkbox isRequired colorScheme={"green"} size={"md"} spacing={"0.8rem"}>Я принимаю согласие на обработку <a href="#" onClick={onOpen}>персональных данных</a></Checkbox>
+                <Checkbox isRequired colorScheme={"green"} size={"md"} spacing={"0.8rem"}>
+                  Я принимаю согласие на обработку <Link href="#" color='teal.500' onClick={onOpen}>
+                    персональных данных
+                  </Link>
+                </Checkbox>
               </VStack>
             </FormControl>
 

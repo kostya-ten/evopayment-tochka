@@ -3,18 +3,22 @@ import {
   Box,
   BoxProps,
   Button,
-  chakra, Checkbox,
+  chakra,
+  Checkbox,
   FormControl,
   FormLabel,
   Heading,
-  HTMLChakraProps, Link,
-  Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay,
-  Stack, Text,
-  useColorModeValue, useDisclosure, VStack
+  HTMLChakraProps,
+  Link,
+  Stack,
+  useColorModeValue,
+  useDisclosure,
+  VStack
 } from "@chakra-ui/react";
 import {DaDataParty, DaDataSuggestion, PartySuggestions} from 'react-dadata';
-import { settings } from '../settings';
+import {settings} from '../settings';
 import 'react-dadata/dist/react-dadata.css';
+import AgreementPersonalData from "./agreement_personal_data";
 
 
 export const Card = (props: BoxProps) => (
@@ -50,8 +54,24 @@ export const Logo = (props: HTMLChakraProps<'svg'>) => {
 
 export default function Index() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [value, setValue] = useState<DaDataSuggestion<DaDataParty> | undefined>();
-  console.log(value)
+  const [inn, setInn] = useState("")
+  const [agreeDisabled, setAgreeDisabled] = useState(true)
+
+
+  const data = function (dadata: DaDataSuggestion<DaDataParty> | undefined) {
+    if (dadata){
+      setInn(dadata?.data.inn)
+    }
+  }
+
+  const button_agree = function (event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.checked){
+      setAgreeDisabled(false)
+    }
+    else {
+      setAgreeDisabled(true)
+    }
+  }
 
   return (
     <Box
@@ -67,19 +87,13 @@ export default function Index() {
           Открытие расчетного счета
         </Heading>
 
-        {/*<Text mt="4" mb="8" align="center" maxW="md" fontWeight="medium">*/}
-        {/*  <Text as="span">Don&apos;t have an account?</Text>*/}
-        {/*  <Link href="#">Start free trial</Link>*/}
-        {/*</Text>*/}
-
         <Card>
           <Stack spacing="6">
             <FormControl id="email">
               <FormLabel>Укажите название ООО, ИП или ИНН</FormLabel>
               <PartySuggestions
                 token={settings.DaDataKey}
-                onChange={setValue}
-                value={value}
+                onChange={data}
                 count={3}
                 minChars={4}
                 filterStatus={['ACTIVE']}
@@ -89,7 +103,7 @@ export default function Index() {
 
             <FormControl id="agree">
               <VStack spacing={[1, 5]} direction={['column', 'row']}>
-                <Checkbox isRequired colorScheme={"green"} size={"md"} spacing={"0.8rem"}>
+                <Checkbox isRequired colorScheme={"green"} size={"md"} spacing={"0.8rem"} onChange={button_agree}>
                   Я принимаю согласие на обработку <Link href="#" color='teal.500' onClick={onOpen}>
                     персональных данных
                   </Link>
@@ -97,124 +111,13 @@ export default function Index() {
               </VStack>
             </FormControl>
 
-            <Button type="submit" colorScheme="green" size="lg" fontSize="md">
+            <Button isDisabled={agreeDisabled} type="submit" colorScheme="green" size="lg" fontSize="md">
               Далее
             </Button>
           </Stack>
         </Card>
-
-        {/*  <LoginForm />*/}
-        {/*  <DividerWithText mt="6">or continue with</DividerWithText>*/}
-        {/*  <SimpleGrid mt="6" columns={3} spacing="3">*/}
-        {/*    <Button color="currentColor" variant="outline">*/}
-        {/*      <VisuallyHidden>Login with Facebook</VisuallyHidden>*/}
-        {/*      <FaFacebook />*/}
-        {/*    </Button>*/}
-        {/*    <Button color="currentColor" variant="outline">*/}
-        {/*      <VisuallyHidden>Login with Google</VisuallyHidden>*/}
-        {/*      <FaGoogle />*/}
-        {/*    </Button>*/}
-        {/*    <Button color="currentColor" variant="outline">*/}
-        {/*      <VisuallyHidden>Login with Github</VisuallyHidden>*/}
-        {/*      <FaGithub />*/}
-        {/*    </Button>*/}
-        {/*  </SimpleGrid>*/}
-
       </Box>
-
-      <Modal isOpen={isOpen} onClose={onClose} size={"3xl"} scrollBehavior={'inside'}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Соглашение на обработку персональных данных</ModalHeader>
-          <ModalCloseButton colorScheme='green' />
-          <ModalBody>
-            <Text pb={5}>
-            В соответствии с требованиями Федерального закона от 27.07.2006 г. № 152-ФЗ
-            «О персональных данных» я даю своё согласие Публичному акционерному
-            обществу Банк «Финансовая Корпорация Открытие» (Генеральная лицензия на
-            осуществление банковских операций № 2209, выдана Банком России 24.11.2014
-            г., место нахождения: 115114, г. Москва, ул. Летниковская, д. 2, стр. 4), КИВИ
-            Банк (акционерное общество) (Генеральная лицензия Банка России № 2241,
-            выдана Банком России от 22.01.2015 г., место нахождения: 117648, г. Москва,
-            мкр. Чертаново Северное, д. 1А, корп. 1), АО "Точка" (место нахождения:
-            109240, г.Москва, ул.Радищевская верхн., д.2/1, строение 5, пом.1, эт.3, ком.4)
-            (далее – Операторы), ООО "ВЕРТЕРА СТОЛИЦА"
-                (место нахождения: 123056, г.Москва, 2-Я Брестская ул, д. 9 стр. 1, этаж/помещ. 6/V офис 613)
-            на обработку, сбор, запись, систематизацию, накопление,
-            хранение, уточнение, обновление, изменение, извлечение, использование,
-            распространение, передачу, обезличивание, блокирование и удаление моих
-            персональных данных, совершаемую c использованием средств автоматизации
-            или без них.
-            </Text>
-
-            <Text pb={5}>
-            В соответствии с Федеральным законом от 07.07.2003 № 126-ФЗ «О связи» даю
-            свое согласие оператору связи, с которым у меня заключен договор об
-            оказании услуг связи в отношении мобильного номера, указанного мной, на
-            предоставление Операторам сведений об абоненте и оказываемых мне услугах
-            связи по договору об оказании услуг связи, заключенному с таким оператором
-            связи.
-            </Text>
-
-            <Text pb={5}>
-            Даю согласие на обработку моих персональных данных, включая фамилию, имя,
-            отчество, дату и место рождения, данные документа, удостоверяющего
-            личность, данные о гражданстве, адресе, семейном, социальном,
-            имущественном положении, образовании, профессии, доходах, месте работы,
-            контактных данных телефона и другой информации личного характера, которая
-            может быть использована для целей продвижения услуг Операторов,
-            совместных услуг Операторов и третьих лиц.
-            </Text>
-
-            <Text pb={5}>
-            Данное согласие действует с момента отправки заявки до момента получения
-            Операторами письменного заявления об отзыве настоящего согласия на
-            обработку персональных данных.
-            </Text>
-
-            <Text pb={5}>
-            Оставляя свои данные в отправляемой мной заявке и предоставляя
-            дополнительные данные и документы по телефону, факсу или электронной
-            почте, я подтверждаю и признаю, что я прочитал изложенное соглашение, и
-            даю своё безусловное согласие без оговорок и ограничений.
-            </Text>
-
-            <Text pb={1} fontSize='2xl'>Условия бронирования счёта</Text>
-            <Text pb={5}>
-            Услуга по резервированию номера расчётного счёта оказывается юридическим
-            лицам и индивидуальным предпринимателям (далее – клиенты), заполнившим
-            заявку на сайте.
-            </Text>
-            <Text pb={5}>
-              Платежи по зарезервированному счёту банк не проводит. Деньги,
-              перечисленные клиенту по реквизитам зарезервированного счёта, хранятся
-              в банке в течение 5 рабочих дней. Если счёт не будет открыт, через 5 рабочих
-              дней деньги вернутся их отправителю. Банк не несет ответственности за убытки,
-              возникшие у клиента, если на дату возврата денег отправителю, счёт
-              отправителя закрыт или у него поменялись реквизиты. Если в течение 5
-              рабочих дней с момента поступления денег на зарезервированный счёт он
-              будет открыт, деньги переведутся на открытый счёт в сроки, установленные
-              действующим законодательством РФ.
-            </Text>
-            <Text pb={5}>
-              Банк может отказать в резервировании номера счёта в одностороннем порядке
-              без объяснения причины. Банк может отказать в открытии зарезервированного
-              счёта в случаях, установленных внутренними документами банка в соответствии
-              с действующим законодательством РФ.
-            </Text>
-
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme='green' mr={3} onClick={onClose}>Закрыть</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
+      <AgreementPersonalData isOpen={isOpen} onClose={onClose} />
     </Box>
-
-    // <header className="App-header">
-    //   <img src="img/logo_vertera.svg" alt="logo" />
-    // </header>
   )
 }

@@ -57,6 +57,7 @@ export default function Index() {
   const [inn, setInn] = useState("")
   const [agreeDisabled, setAgreeDisabled] = useState(true)
 
+  console.log(inn)
 
   const data = function (dadata: DaDataSuggestion<DaDataParty> | undefined) {
     if (dadata){

@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from '@chakra-ui/react'
 import { themeDefault } from './themes'
 import { YMInitializer } from 'react-yandex-metrika';
-import {settings} from "./settings";
+import { settings } from "./settings";
 
 
 ReactDOM.render(

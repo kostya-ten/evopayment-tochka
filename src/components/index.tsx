@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
   Box,
   BoxProps,
@@ -12,7 +12,7 @@ import {
   Stack, Text,
   useColorModeValue, useDisclosure, VStack
 } from "@chakra-ui/react";
-import { PartySuggestions } from 'react-dadata';
+import {DaDataParty, DaDataSuggestion, PartySuggestions} from 'react-dadata';
 import { settings } from '../settings';
 import 'react-dadata/dist/react-dadata.css';
 
@@ -50,6 +50,8 @@ export const Logo = (props: HTMLChakraProps<'svg'>) => {
 
 export default function Index() {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [value, setValue] = useState<DaDataSuggestion<DaDataParty> | undefined>();
+  console.log(value)
 
   return (
     <Box
@@ -76,9 +78,12 @@ export default function Index() {
               <FormLabel>Укажите название ООО, ИП или ИНН</FormLabel>
               <PartySuggestions
                 token={settings.DaDataKey}
+                onChange={setValue}
+                value={value}
                 count={3}
                 minChars={4}
                 filterStatus={['ACTIVE']}
+
               />;
             </FormControl>
 

@@ -15,8 +15,5 @@ insert_final_newline = false
 [Makefile]
 indent_style = tab
 
-[{*.yml, *.yaml}]
-indent_size = 2
-
-[{*.tsx, *.ts}]
+[{*.yml, *.yaml, *.json, *.tsx, *.ts}]
 indent_size = 2

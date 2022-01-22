@@ -1,12 +1,12 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
+import Index from './components/index'
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src="img/logo_vertera.svg" alt="logo" />
-      </header>
+      <Index />
     </div>
   );
 }

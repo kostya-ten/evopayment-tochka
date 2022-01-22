@@ -5,11 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from '@chakra-ui/react'
 import { themeDefault } from './themes'
+import { YMInitializer } from 'react-yandex-metrika';
+import {settings} from "./settings";
 
 
 ReactDOM.render(
   <React.StrictMode>
       <ChakraProvider theme={themeDefault} resetCSS={true}>
+        <YMInitializer accounts={[settings.YandexMetrika]} />
         <App />
       </ChakraProvider>
   </React.StrictMode>,

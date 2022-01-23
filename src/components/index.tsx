@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useReducer, useState} from "react";
 import {
   Box,
   BoxProps,
@@ -21,6 +21,9 @@ import 'react-dadata/dist/react-dadata.css';
 import AgreementPersonalData from "./agreement_personal_data";
 import logo from '../logo_vertera.svg';
 import {useForm} from "react-hook-form";
+import {Individual} from "./individual";
+import {Organization} from "./organization";
+
 
 
 export const Card = (props: BoxProps) => (
@@ -34,7 +37,37 @@ export const Card = (props: BoxProps) => (
   />
 )
 
-export default function Index() {
+export const Index = () => {
+  const reducerView = (state: any, action: any) => {
+    switch (action.type) {
+      case 'individual':
+        return {view: 'individual'};
+      case 'organization':
+        return {view: 'organization'};
+      default:
+        throw new Error();
+    }
+  }
+  const [stateView, dispatchView] = useReducer(reducerView, {view: 'main'});
+  console.log(stateView)
+
+  if (stateView.view === 'individual') {
+    return <Individual />
+  }
+  else if (stateView.view === 'organization') {
+    return <Organization />
+  }
+  else {
+    return <Main dispatchView={dispatchView}/>
+  }
+
+}
+
+interface MainProps {
+  dispatchView: React.Dispatch<any>;
+}
+
+const Main = (props: MainProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [agreeDisabled, setAgreeDisabled] = useState(true)
   const [dadata, setDadata] = useState<DaDataSuggestion<DaDataParty> | undefined>();
@@ -59,6 +92,13 @@ export default function Index() {
         message: 'Не заполнено поле',
       });
       return;
+    }
+
+    if (dadata.data.type === 'INDIVIDUAL'){
+      props.dispatchView({type: 'individual'})
+    }
+    else if (dadata.data.type === 'LEGAL'){
+      props.dispatchView({type: 'organization'})
     }
   };
 
@@ -120,3 +160,4 @@ export default function Index() {
     </Box>
   )
 }
+

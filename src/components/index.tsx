@@ -1,8 +1,5 @@
 import React, {useState} from "react";
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
   Box,
   BoxProps,
   Button,
@@ -11,10 +8,9 @@ import {
   FormLabel,
   Heading,
   Image,
-  Text,
-  Input,
   Link,
   Stack,
+  Text,
   useColorModeValue,
   useDisclosure,
   VStack,
@@ -54,6 +50,9 @@ export default function Index() {
   }
 
   const submit = (data: any) => {
+    forms.clearErrors('inn')
+    console.log('dddd')
+
     if (!dadata?.data.inn) {
       forms.setError("inn", {
         type: "invalid",

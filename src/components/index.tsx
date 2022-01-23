@@ -1,5 +1,8 @@
 import React, {useState} from "react";
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
   BoxProps,
   Button,
@@ -8,17 +11,20 @@ import {
   FormLabel,
   Heading,
   Image,
+  Text,
+  Input,
   Link,
   Stack,
   useColorModeValue,
   useDisclosure,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
 import {DaDataParty, DaDataSuggestion, PartySuggestions} from 'react-dadata';
 import {settings} from '../settings';
 import 'react-dadata/dist/react-dadata.css';
 import AgreementPersonalData from "./agreement_personal_data";
 import logo from '../logo_vertera.svg';
+import {useForm} from "react-hook-form";
 
 
 export const Card = (props: BoxProps) => (
@@ -34,18 +40,11 @@ export const Card = (props: BoxProps) => (
 
 export default function Index() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [inn, setInn] = useState("")
   const [agreeDisabled, setAgreeDisabled] = useState(true)
+  const [dadata, setDadata] = useState<DaDataSuggestion<DaDataParty> | undefined>();
+  const forms = useForm();
 
-  console.log(inn)
-
-  const data = function (dadata: DaDataSuggestion<DaDataParty> | undefined) {
-    if (dadata){
-      setInn(dadata?.data.inn)
-    }
-  }
-
-  const button_agree = function (event: React.ChangeEvent<HTMLInputElement>) {
+  const button_agree = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked){
       setAgreeDisabled(false)
     }
@@ -53,6 +52,16 @@ export default function Index() {
       setAgreeDisabled(true)
     }
   }
+
+  const submit = (data: any) => {
+    if (!dadata?.data.inn) {
+      forms.setError("inn", {
+        type: "invalid",
+        message: 'Не заполнено поле',
+      });
+      return;
+    }
+  };
 
   return (
     <Box
@@ -68,35 +77,45 @@ export default function Index() {
           Открытие расчетного счета
         </Heading>
 
-        <Card>
-          <Stack spacing="6">
-            <FormControl id="email">
-              <FormLabel>Укажите название ООО, ИП или ИНН</FormLabel>
-              <PartySuggestions
-                token={settings.DaDataKey}
-                onChange={data}
-                count={3}
-                minChars={4}
-                filterStatus={['ACTIVE']}
+        <form onSubmit={forms.handleSubmit(submit)}>
+          <Card>
+            <Stack spacing="6">
+              <FormControl id="org_name">
+                <FormLabel>Укажите название ООО, ИП или ИНН</FormLabel>
+                <PartySuggestions
+                  {...forms.register("org_name") }
+                  token={settings.DaDataKey}
+                  onChange={setDadata}
+                  count={3}
+                  minChars={4}
+                  filterStatus={['ACTIVE']}
+                />
+                {
+                  forms.formState.errors.inn?.type === 'invalid' &&
+                  <Text align={"left"} fontSize='md' color='red' pt={2}>
+                    { forms.formState.errors.inn.message }
+                  </Text>
+                }
+              </FormControl>
 
-              />;
-            </FormControl>
+              <FormControl id="agree">
+                <VStack spacing={[1, 5]} direction={['column', 'row']}>
+                  <Checkbox isRequired colorScheme={"green"} size={"md"} spacing={"0.8rem"} onChange={button_agree}>
+                    Я принимаю согласие на обработку <Link href="#" color='teal.500' onClick={onOpen}>
+                      персональных данных
+                    </Link>
+                  </Checkbox>
+                </VStack>
+              </FormControl>
 
-            <FormControl id="agree">
-              <VStack spacing={[1, 5]} direction={['column', 'row']}>
-                <Checkbox isRequired colorScheme={"green"} size={"md"} spacing={"0.8rem"} onChange={button_agree}>
-                  Я принимаю согласие на обработку <Link href="#" color='teal.500' onClick={onOpen}>
-                    персональных данных
-                  </Link>
-                </Checkbox>
-              </VStack>
-            </FormControl>
+              <Button isDisabled={agreeDisabled} type="submit" colorScheme="green" size="lg" fontSize="md">
+                Далее
+              </Button>
 
-            <Button isDisabled={agreeDisabled} type="submit" colorScheme="green" size="lg" fontSize="md">
-              Далее
-            </Button>
-          </Stack>
-        </Card>
+            </Stack>
+          </Card>
+          </form>
+
       </Box>
       <AgreementPersonalData isOpen={isOpen} onClose={onClose} />
     </Box>

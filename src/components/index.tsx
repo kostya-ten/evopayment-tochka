@@ -1,7 +1,6 @@
 import React, {useReducer, useState} from "react";
 import {
   Box,
-  BoxProps,
   Button,
   Checkbox,
   FormControl,
@@ -23,19 +22,8 @@ import logo from '../logo_vertera.svg';
 import {useForm} from "react-hook-form";
 import {Individual} from "./individual";
 import {Organization} from "./organization";
+import {Card} from "./card";
 
-
-
-export const Card = (props: BoxProps) => (
-  <Box
-    bg={useColorModeValue('white', 'gray.700')}
-    py="8"
-    px={{ base: '4', md: '10' }}
-    shadow="base"
-    rounded={{ sm: 'lg' }}
-    {...props}
-  />
-)
 
 export const Index = () => {
   const reducerView = (state: any, action: any) => {
@@ -49,7 +37,6 @@ export const Index = () => {
     }
   }
   const [stateView, dispatchView] = useReducer(reducerView, {view: 'main'});
-  console.log(stateView)
 
   if (stateView.view === 'individual') {
     return <Individual />
